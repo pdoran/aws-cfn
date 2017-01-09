@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-  "Description": "Node.js Multi-AZ Auto Scaling Front End",
+  "Description": "Node.js Multi-AZ Auto Scaling Servers",
   "Parameters" : {
 
     "KeyName": {
@@ -9,7 +9,7 @@
       "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
     },
 
-    "WebserverAMI": {
+    "ServerAMI": {
       "Description" : "AMI for web server",
       "Type": "String",
       "MinLength": "1",
@@ -164,10 +164,7 @@
   },
 
   "Conditions" : {
-    "Is-EC2-VPC"     : { "Fn::Or" : [ {"Fn::Equals" : [{"Ref" : "AWS::Region"}, "eu-central-1" ]},
-                                      {"Fn::Equals" : [{"Ref" : "AWS::Region"}, "cn-north-1" ]},
-                                      {"Fn::Equals" : [{"Ref" : "AWS::Region"}, "ap-northeast-2" ]}]},
-    "Is-EC2-Classic" : { "Fn::Not" : [{ "Condition" : "Is-EC2-VPC"}]}
+  
   },
 
   "Resources" : {
@@ -186,7 +183,7 @@
       }
     },
 
-    "WebServerGroup" : {
+    "ServerGroup" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
       "Properties" : {
         "AvailabilityZones" : { "Fn::GetAZs" : "" },
@@ -251,7 +248,7 @@
 
   "Outputs" : {
     "WebsiteURL" : {
-      "Description" : "URL for newly created LAMP stack",
+      "Description" : "URL for newly created stack",
       "Value" : { "Fn::Join" : ["", ["http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer", "DNSName" ]}]] }
     }
   }
